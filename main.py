@@ -11,7 +11,7 @@ vcn_channel = {}
 async def on_guild_join(guild):
     for channel in guild.text_channels:
         if channel.permissions_for(guild.me).send_messages:
-            await channel.send('VC通知をするチャンネルに/vcn_hereと入力してください。')
+            await channel.send('VC通知をするチャンネルに/vcn_hereと入力してください。|Enter /vcn_here for the channel for VC notifications.')
         break
     for guild in client.guilds:
         print(guild.name)
@@ -26,14 +26,14 @@ async def on_guild_remove(guild):
 async def on_message(message):
     if len(message.content) >= 9:
         if message.content[:9] == '/vcn_help':
-            await message.channel.send("/vcn_help ： VC通知コマンド一覧を表示 \n" +
-                                    "/vcn_invite ： 招待リンクを表示 \n" +
-                                    "/vcn_here ： VC入室ログチャンネルをこのコマンドが送信されたチャンネルに設定します。")
+            await message.channel.send("/vcn_help ： VC通知コマンド一覧を表示|Display VCNotifire commands \n" +
+                                    "/vcn_invite ： 招待リンクを表示|Display VCNotifire invite link \n" +
+                                    "/vcn_here ： VC入室ログチャンネルをこのコマンドが送信されたチャンネルに設定します。|Sets the VC joining log channel to the channel to which this command was sent.")
         if message.content[:9] == '/vcn_invite':
-            await message.channel.send("招待リンク：\n"+"https://discord.com/api/oauth2/authorize?client_id=869553096861294602&permissions=2181056512&scope=bot")
+            await message.channel.send("招待リンク|invite link：\n"+"https://discord.com/api/oauth2/authorize?client_id=869553096861294602&permissions=2181056512&scope=bot")
         if message.content[:9] == '/vcn_here':
             vcn_channel[f'{message.guild.id}'] = message.channel.id
-            await message.channel.send(f"VC入室ログチャンネルをここに設定します。")
+            await message.channel.send(f"Set the VC joining log channel here.")
     print(vcn_channel)
 
 @client.event
@@ -42,12 +42,12 @@ async def on_voice_state_update(member, before, after):
         alert_channel = client.get_channel(vcn_channel[f'{member.guild.id}'])
         if before.channel is None:
             embed = discord.Embed(
-                title=f"{member.nick or member.name}が {after.channel.name} に参加しました", description="こんちゃ", color=0xff0000)
+                title=f"{member.nick or member.name} Joined in {after.channel.name}", description="Hi", color=0xff0000)
             embed.set_thumbnail(url=member.avatar_url)
             await alert_channel.send(embed=embed)
         elif after.channel is None:
             embed = discord.Embed(
-                title=f"{member.nick or member.name}が {before.channel.name} から抜けました", description="お疲れ", color=0xff0000,)
+                title=f"{member.nick or member.name} exited from {before.channel.name}", description="Bye", color=0xff0000,)
             embed.set_thumbnail(url=member.avatar_url)
             await alert_channel.send(embed=embed)
 
