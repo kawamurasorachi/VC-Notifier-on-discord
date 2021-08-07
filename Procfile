@@ -1,1 +1,1 @@
-vc-notier-on-discord: python main.py
+vc-notifier-on-discord: python main.py
