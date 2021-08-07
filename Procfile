@@ -1,0 +1,1 @@
+vc-notier-on-discord: python main.py
